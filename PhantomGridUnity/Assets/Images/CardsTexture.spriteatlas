@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CardsTexture
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 2be131523ef70f14cbd48db56df69192, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e1d758e006de8f647aff08f74462ac73, type: 3}
+  - {fileID: 21300000, guid: 67df43f019eb2fa4bba59d652c379004, type: 3}
+  - {fileID: 21300000, guid: afa9c121309e5de4ba891ea44265a200, type: 3}
+  - {fileID: 21300000, guid: dc9d113196f131249a6448a021318198, type: 3}
+  - {fileID: 21300000, guid: f327b7b17885f4b4d96f696c156a32d0, type: 3}
+  - {fileID: 21300000, guid: 06d022426364c2e4e86ee93385fa6fd2, type: 3}
+  - {fileID: 21300000, guid: e3f1bb72eca920248a428942d18e54e4, type: 3}
+  - {fileID: 21300000, guid: 5e06129252f36464cb74c37e74600c8c, type: 3}
+  - {fileID: 21300000, guid: d4f200b24679acb46b5de6be97f074c0, type: 3}
+  - {fileID: 21300000, guid: 1427ea238b3508646b5ada04f6a445d9, type: 3}
+  - {fileID: 21300000, guid: 5b0104a318957bb428762b4fa3bdfbdf, type: 3}
+  - {fileID: 21300000, guid: 55a6a8f301fe926458852f8a96c8d5e6, type: 3}
+  - {fileID: 21300000, guid: d3b31a042899b0e46875e6cd90fb9115, type: 3}
+  - {fileID: 21300000, guid: fed47a24224057540a58ce944e6804e4, type: 3}
+  - {fileID: 21300000, guid: e962c7341cf4fa64c962f2194fead77f, type: 3}
+  - {fileID: 21300000, guid: 0fd9dbc4bc50de944bb3351e8d87b5bf, type: 3}
+  - {fileID: 21300000, guid: 1e710c353efa38e4791848f2de65839d, type: 3}
+  - {fileID: 21300000, guid: 8a3a045524b0119419a8a53fe460a607, type: 3}
+  - {fileID: 21300000, guid: 4eb33e650fa64e8478a0ed9464715a6c, type: 3}
+  - {fileID: 21300000, guid: 63ec1d85085cdca4ba15f7bf4f47d97f, type: 3}
+  - {fileID: 21300000, guid: a30a0af5d1441ec4e9f8ae5949f851c7, type: 3}
+  - {fileID: 21300000, guid: 42d39606ccdf79645884e644d025c661, type: 3}
+  - {fileID: 21300000, guid: bb90e4860912628498628dec3bee202e, type: 3}
+  - {fileID: 21300000, guid: 6de707b7301ed394898b2fdf37cf08df, type: 3}
+  - {fileID: 21300000, guid: 407f03e7ace16734f9a05d9b354e2c7c, type: 3}
+  - {fileID: 21300000, guid: e5c92af73df02aa46a0bf791ce95a109, type: 3}
+  - {fileID: 21300000, guid: 4429ba182a5218c41a5ed26288d72798, type: 3}
+  - {fileID: 21300000, guid: fb241df9802ee284abf566ac72f05c1e, type: 3}
+  - {fileID: 21300000, guid: a598c89a9a59a654baf8244a9854b829, type: 3}
+  - {fileID: 21300000, guid: 4945f05bcc9ce8248ad54a1be19ef23f, type: 3}
+  - {fileID: 21300000, guid: 4bb471ab754604a40b06a62b9daf9757, type: 3}
+  - {fileID: 21300000, guid: 1e361dcbbcc79be47b98a413b3c559e9, type: 3}
+  - {fileID: 21300000, guid: f94336db592e13f498cb48d63298be0f, type: 3}
+  - {fileID: 21300000, guid: 9254416c21107eb459a9c205cfa8b47c, type: 3}
+  - {fileID: 21300000, guid: 3e45d26caf51c7f4f912cd1034abc6c0, type: 3}
+  - {fileID: 21300000, guid: f021bb9c6610a1d42b5521d70d79a111, type: 3}
+  - {fileID: 21300000, guid: e21a8acc65429064e85914a5121b54c9, type: 3}
+  - {fileID: 21300000, guid: 4661893d7ad5d4f4a803702a7a4371e1, type: 3}
+  - {fileID: 21300000, guid: d7925fada7cbb304388430f54215205e, type: 3}
+  - {fileID: 21300000, guid: 3a6a292eac861834783daa09a1e1eeb6, type: 3}
+  - {fileID: 21300000, guid: cbca467eafcb3654f96c06d7b8c57aaa, type: 3}
+  - {fileID: 21300000, guid: db4c64aec1f729b499fd566c127f5455, type: 3}
+  - {fileID: 21300000, guid: 13911acef559c264d916b7055c46191f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - icons8-dove-100
+  - icons8-microsoft-100
+  - icons8-lion-100
+  - icons8-call-of-duty-warzone-100
+  - icons8-rhinoceros-100
+  - icons8-lego-100
+  - icons8-ubisoft-100
+  - icons8-police-car-100
+  - icons8-among-us-100
+  - icons8-monkey-with-a-banana-100
+  - icons8-food-truck-100
+  - icons8-gmail-100
+  - icons8-chrome-100
+  - icons8-duck-100
+  - icons8-elephant-100
+  - icons8-flamingo-100
+  - icons8-dolphin-100
+  - icons8-brave-web-browser-100
+  - icons8-burger-king-100
+  - icons8-google-drive-100
+  - icons8-budgie-100
+  - icons8-nvidia-100
+  - icons8-hummingbird-100
+  - icons8-mcdonalds-app-100
+  - icons8-penguin-100
+  - icons8-aggressive-shark-100
+  - icons8-discord-new-100
+  - icons8-clown-fish-100
+  - icons8-bee-100
+  - icons8-unreal-engine-100
+  - icons8-cathedral-100
+  - icons8-mouse-animal-100
+  - icons8-ladybug-100
+  - icons8-cafe-100
+  - icons8-rockstar-games-100
+  - icons8-cute-owl-100
+  - icons8-toucan-100
+  - icons8-machaon-butterfly-100
+  - icons8-2k-logo-100
+  - icons8-cat-100
+  - icons8-rattlesnake-100
+  - icons8-opera-100
+  - icons8-dog-100
+  m_RenderDataMap: {}
+  m_Tag: CardsTexture
+  m_IsVariant: 0
