@@ -1,14 +1,16 @@
 ﻿using System;
+using PhantomGrid.Events;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Phantom.Scripts
 {
     public class CardUI : MonoBehaviour, ICardUI
     {
         private int FlipTrigger = Animator.StringToHash("Flip");
-        
-        public event Action<ICard> OnCardOpened;
+        private int HideTrigger = Animator.StringToHash("Hide");
+
         public RectTransform rectTransform =>  _cardRect;
 
         [SerializeField] private GameObject _frontCard;
@@ -28,14 +30,37 @@ namespace Phantom.Scripts
         
         private ICard _card;
 
+        private IEventBus _eventBus;
+        
+        [Inject]
+        public void Construct(IEventBus eventBus)
+        {
+            _eventBus =  eventBus;
+        }
+        
         private void Start()
         {
             _cardButton.onClick.AddListener(OnCardClicked);
+            _frontCard.SetActive(false);
+            _backCard.SetActive(true);
         }
 
         public void SetCard(ICard card)
         {
             _card = card;
+            _card.MatchCompleted += OnMatchCompleted;
+            _card.CardResetted += ResetCard;
+        }
+
+        private void OnMatchCompleted()
+        {
+            _cardAnimator.SetTrigger(HideTrigger);
+            _cardButton.interactable = false;
+        }
+
+        public void SetImage(Sprite sprite)
+        {
+            _cardImage.sprite = sprite;
         }
         
         public void SetPosition(Vector2 position)
@@ -57,24 +82,29 @@ namespace Phantom.Scripts
         
         #region AnimationEvents
 
-        public void SwitchCardFace()
+        public void OnSwitchCardFace()
         {
             var showFrontCard = _backCard.activeSelf;
             _frontCard.SetActive(showFrontCard);
             _backCard.SetActive(!showFrontCard);
         }
         
-        public void CardFlipped()
+        public void OnCardFlipped()
         {
             if (_frontCard.activeSelf)
             {
-                OnCardOpened?.Invoke(_card); 
                 _cardButton.interactable = false;
+                _eventBus.FireEvent(new CardFlippedEvent(_card));
             }
             else
             {
                 _cardButton.interactable = true;
             }
+        }
+
+        public void OnCardHide()
+        {
+            gameObject.SetActive(false);
         }
 
         #endregion
@@ -86,17 +116,22 @@ namespace Phantom.Scripts
         
         private void OnDestroy()
         {
+            if (_card != null)
+            {
+                _card.MatchCompleted -= OnMatchCompleted;
+                _card.CardResetted -= ResetCard;
+            }
             _cardButton.onClick.RemoveAllListeners();
         }
     }
 
     public interface ICardUI
     {
-        event Action<ICard> OnCardOpened;
         RectTransform rectTransform { get; }
         void SetPosition(Vector2  position);
         void SetSize(float width, float height);
         void SetCard(ICard card);
+        void SetImage(Sprite sprite);
         void ResetCard();
         
     }
