@@ -1,7 +1,10 @@
 ﻿using System;
+using Newtonsoft.Json;
+using PhantomGrid.Common;
 
 namespace Phantom.Scripts
 {
+    [Serializable]
     public class Card : ICard
     {
         public event Action MatchCompleted;
@@ -9,6 +12,9 @@ namespace Phantom.Scripts
 
         public int Id { get; }
         public int SpriteIndex { get; }
+        
+        [JsonProperty]
+        public bool IsMatchComplete { get; private set; } 
 
         public Card(int id, int spriteIndex)
         {
@@ -23,22 +29,23 @@ namespace Phantom.Scripts
 
         public void MatchComplete()
         {
+            IsMatchComplete  = true;
             MatchCompleted?.Invoke();
         }
 
-        public void ResetCard()
+        public void Reset()
         {
             CardResetted?.Invoke();
         }
     }
 
-    public interface ICard : IEquatable<ICard>
+    public interface ICard : IEquatable<ICard>, IResettable
     {
         event Action MatchCompleted;
         event Action CardResetted;
         int Id { get; }
         int SpriteIndex { get; }
+        bool IsMatchComplete { get; }
         void MatchComplete();
-        void ResetCard();
     }
 }

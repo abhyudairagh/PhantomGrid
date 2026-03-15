@@ -10,7 +10,7 @@ namespace PhantomGrid
     public class CustomGrid : MonoBehaviour
     {
         [SerializeField] private float leastBorderPadding = 0;
-        
+        [SerializeField] private float maxSize = 512;
         [SerializeField] private RectTransform _frameRectTransform;
         
         [SerializeField] private CardUI _cardPrefab;
@@ -86,13 +86,18 @@ namespace PhantomGrid
                 for (var j = 0; j < columns; j++)
                 {
                     var cardData = _cardsData.ElementAt(dataIndex);
-                    var position = FixOffsetPosition( rows, columns, (i + 1) * startPosX,  (j + 1) * startPosY);
-                    var cardUI = _instantiator.InstantiatePrefabForComponent<ICardUI>(_cardPrefab, _frameRectTransform);
-                    cardUI.SetPosition(position);
-                    cardUI.SetSize(cardSize.x, cardSize.y);
-                    cardUI.SetCard(cardData);
-                    var sprite = _cardSpriteRepository.GetSpriteFromIndex(cardData.SpriteIndex);
-                    cardUI.SetImage(sprite);
+                    if (!cardData.IsMatchComplete)
+                    {
+                        var position = FixOffsetPosition(rows, columns, (i + 1) * startPosX, (j + 1) * startPosY);
+                        var cardUI =
+                            _instantiator.InstantiatePrefabForComponent<ICardUI>(_cardPrefab, _frameRectTransform);
+                        cardUI.SetPosition(position);
+                        cardUI.SetSize(cardSize.x, cardSize.y);
+                        cardUI.SetCard(cardData);
+                        var sprite = _cardSpriteRepository.GetSpriteFromIndex(cardData.SpriteIndex);
+                        cardUI.SetImage(sprite);
+                    }
+
                     dataIndex++;
                 }
             }

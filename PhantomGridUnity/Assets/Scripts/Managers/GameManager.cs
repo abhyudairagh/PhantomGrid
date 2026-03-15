@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Phantom.Scripts;
 using PhantomGrid.Events;
 using PhantomGrid.Extension;
 using PhantomGrid.Factory;
+using PhantomGrid.ScriptableObjects;
 using UnityEngine;
 using Zenject;
 
 namespace PhantomGrid.Managers
 {
-    public class GameManager : MonoBehaviour, IGameManager
+    public class GameManager : MonoBehaviour
     {
-        [SerializeField] private int _rows;
-        [SerializeField] private int _columns;
-        
         private IUIManager _uiManager;
         private ICardSpriteRepository _cardImageRepository;
         private ICardFactory _cardFactory;
@@ -22,32 +22,114 @@ namespace PhantomGrid.Managers
 
         private int _totalCards = 0;
         
+        private IGameSettings _gameSettings;
+        private IScoreHandler _scoreHandler;
+        private IGameSessionManager _gameSessionManager;
+
         [Inject]
         public void Construct(
             IUIManager  uiManager,
             ICardSpriteRepository cardImageRepository,
             ICardFactory cardFactory,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            IGameSettings gameSettings,
+            IScoreHandler scoreHandler,
+            IGameSessionManager gameSessionManager)
         {
             _uiManager = uiManager;
             _cardImageRepository = cardImageRepository;
             _cardFactory = cardFactory;
             _eventBus  = eventBus;
+            _gameSettings = gameSettings;
+            _scoreHandler = scoreHandler;
+            _gameSessionManager = gameSessionManager;
         }
         
         private void Start()
         {
-            _totalCards = _rows  * _columns;
-            _uiManager.LoadCardSprites();
-            var cardsData = CreateCardsData();
-            _uiManager.GenerateCards(_rows, _columns, cardsData);
-            
             _eventBus.RegisterEvent<CardFlippedEvent>(OnCardFlipped);
+            _eventBus.RegisterEvent<StartGameEvent>(OnStartGame);
+            _eventBus.RegisterEvent<ResumeGameEvent>(OnResumeGame);
+            _eventBus.RegisterEvent<CloseGameEvent>(OnCloseGame);
+        }
+
+        private void OnCloseGame(CloseGameEvent closeGame)
+        {
+            _gameSessionManager.Reset();
+            _scoreHandler.Reset();
+        }
+
+        private void OnResumeGame(ResumeGameEvent payload)
+        {
+            if (payload.IsResumeSelected)
+            {
+                SetUpResumeGame();
+            }
+            else
+            {
+                _gameSessionManager.Reset();
+            }
+        }
+
+        private void SetUpResumeGame()
+        {
+            var gameSaveData = _gameSessionManager.LoadData();
+            _uiManager.LoadCardSprites();
+            SetUpGame(gameSaveData.Rows, gameSaveData.Columns, gameSaveData.GameStatus.GameLevel, gameSaveData.Cards);
+            _scoreHandler.LoadSavedGameStatus(gameSaveData.GameStatus);
+            _uiManager.ShowGameStatusUpdates(_scoreHandler.CurrentGameStatus);
+            _uiManager.ShowGameScreen(gameSaveData.GameStatus.GameLevel);
+        }
+
+        private void OnStartGame(StartGameEvent payload)
+        {
+           
+
+             var selectedGameLevel =  payload.SelectedLevel;
+             var gameLevel = _gameSettings.GetLevel(selectedGameLevel);
+             
+             var rows = (int)gameLevel.gridSize.x;
+             var columns = (int)gameLevel.gridSize.y;
+            
+             
+             _uiManager.LoadCardSprites();
+            var cardsData = CreateCardsData(rows, columns);
+            
+            SetUpGame(rows, columns, selectedGameLevel, cardsData);
+            _gameSessionManager.Initialize(rows, columns, cardsData.Cast<Card>());
+            _uiManager.ShowGameScreen(selectedGameLevel);
+        }
+
+        private void SetUpGame(int rows, int columns, GameLevel  gameLevel, IEnumerable<ICard> cardsData)
+        {
+            ResetScores();
+            _totalCards = cardsData.Where(card => !card.IsMatchComplete).Count();
+            _uiManager.GenerateCards(rows, columns, cardsData);
+            _scoreHandler.SetGameLevel(gameLevel);
+        }
+
+        private void ResetScores()
+        {
+            _scoreHandler.Reset();
+            _uiManager.ShowGameStatusUpdates(_scoreHandler.CurrentGameStatus);
         }
 
         private void OnCardFlipped(CardFlippedEvent cardFlipEvent)
         {
             ValidateCard(cardFlipEvent.Card);
+            _uiManager.ShowGameStatusUpdates(_scoreHandler.CurrentGameStatus);
+
+            if (_totalCards <= 0)
+            {
+                SetGameOver();
+            }
+        }
+
+        private void SetGameOver()
+        {
+            _scoreHandler.SaveHighScore();
+            _uiManager.ShowGameOver();
+            _gameSessionManager.Reset();
         }
 
         private void ValidateCard(ICard card)
@@ -60,21 +142,34 @@ namespace PhantomGrid.Managers
 
             if (_reservedToCheckPair.Equals(card))
             {
-                _reservedToCheckPair.MatchComplete();
-                card.MatchComplete();
+                HandleMatchFound(card);
             }
             else
             {
-                _reservedToCheckPair.ResetCard();
-                card.ResetCard();
+                HandleMatchFindFailed(card);
             }
-
+            _gameSessionManager.SaveData(_scoreHandler.CurrentGameStatus);
             _reservedToCheckPair = null;
         }
 
-        private IEnumerable<ICard> CreateCardsData()
+        private void HandleMatchFindFailed(ICard card)
         {
-            var individualCardCount = (_rows * _columns) / 2;
+            _reservedToCheckPair.Reset();
+            card.Reset();
+            _scoreHandler.MatchFailed();
+        }
+
+        private void HandleMatchFound(ICard card)
+        {
+            _reservedToCheckPair.MatchComplete();
+            card.MatchComplete();
+            _scoreHandler.MatchFound();
+            _totalCards -= 2;
+        }
+
+        private IEnumerable<ICard> CreateCardsData(int rows, int columns)
+        {
+            var individualCardCount = (rows * columns) / 2;
             return _cardFactory.CreatePairs(individualCardCount, _cardImageRepository.TotalCardSpriteCount)
                 .Shuffle();
         }
@@ -82,10 +177,10 @@ namespace PhantomGrid.Managers
         private void OnDestroy()
         {
             _eventBus.UnregisterEvent<CardFlippedEvent>(OnCardFlipped);
+            _eventBus.UnregisterEvent<StartGameEvent>(OnStartGame);
+            _eventBus.UnregisterEvent<ResumeGameEvent>(OnResumeGame);
+            _eventBus.UnregisterEvent<CloseGameEvent>(OnCloseGame);
         }
     }
 
-    public interface IGameManager
-    {
-    }
 }

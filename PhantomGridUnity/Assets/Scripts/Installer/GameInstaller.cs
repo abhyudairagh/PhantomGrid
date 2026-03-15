@@ -6,7 +6,7 @@ using Zenject;
 
 namespace PhantomGrid.Installer
 {
-    public class GameContext : MonoInstaller
+    public class GameInstaller : MonoInstaller
     {
         [SerializeField]
         private GameManager _gameManager;
@@ -21,6 +21,9 @@ namespace PhantomGrid.Installer
             Container.BindInterfacesTo<EventBus>().AsSingle();
             Container.BindInterfacesTo<CardSpriteRepository>().AsSingle();
             Container.BindInterfacesTo<CardFactory>().AsSingle();
+            Container.BindInterfacesTo<ScoreHandler>().AsSingle();
+            Container.BindInterfacesTo<PersistantDataModel>().AsSingle();
+            Container.BindInterfacesTo<GameSessionManager>().AsSingle();
         }
     }
 }

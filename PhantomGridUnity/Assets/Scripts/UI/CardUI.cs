@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using PhantomGrid.Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,8 @@ namespace Phantom.Scripts
         private ICard _card;
 
         private IEventBus _eventBus;
+        
+        private WaitForSeconds _waitForSeconds =  new WaitForSeconds(0.5f);
         
         [Inject]
         public void Construct(IEventBus eventBus)
@@ -111,6 +114,12 @@ namespace Phantom.Scripts
 
         public void ResetCard()
         {
+            StartCoroutine(AwaitForDisplayTime());
+        }
+
+        private IEnumerator AwaitForDisplayTime()
+        {
+            yield return _waitForSeconds;
             _cardAnimator.SetTrigger(FlipTrigger);
         }
         
@@ -132,7 +141,5 @@ namespace Phantom.Scripts
         void SetSize(float width, float height);
         void SetCard(ICard card);
         void SetImage(Sprite sprite);
-        void ResetCard();
-        
     }
 }
