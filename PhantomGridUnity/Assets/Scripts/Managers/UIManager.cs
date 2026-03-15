@@ -120,9 +120,7 @@ namespace PhantomGrid.Managers
         {
             _gameOverPanel.gameObject.SetActive(true);
 
-            _gameOverPanel.SetScore(_scoreHandler.CurrentGameStatus.CurrentScore, _scoreHandler.GetHighScore(), 
-                new TimeSpan(),
-                new TimeSpan());
+            _gameOverPanel.SetScore(_scoreHandler.CurrentGameStatus.CurrentScore, _scoreHandler.GetHighScore());
         }
 
         public void GenerateCards(int rows, int columns, IEnumerable<ICard> cards)

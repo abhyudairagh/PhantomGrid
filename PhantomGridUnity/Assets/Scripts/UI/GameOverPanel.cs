@@ -38,12 +38,10 @@ namespace PhantomGrid
             RestartClicked?.Invoke();
         }
 
-        public void SetScore(int score, int highScore, TimeSpan currentTime, TimeSpan bestTime)
+        public void SetScore(int score, int highScore)
         {
             currentScoreText.text = score.ToString();
             highScoreText.text = highScore.ToString();
-            //currentTimeText.text = currentTime.ToString("hh':'mm':'ss");
-            //bestTimeText.text = highScore.ToString("hh':'mm':'ss");
         }
 
         private void OnDestroy()
@@ -57,6 +55,6 @@ namespace PhantomGrid
     {
         event Action RestartClicked;
         event Action ExitGameClicked;
-        void SetScore(int score, int  highScore, TimeSpan currentTime, TimeSpan bestTime);
+        void SetScore(int score, int  highScore);
     }
 }
