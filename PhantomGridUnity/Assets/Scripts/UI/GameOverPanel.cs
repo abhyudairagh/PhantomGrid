@@ -8,7 +8,7 @@ namespace PhantomGrid
     public class GameOverPanel : MonoBehaviour, IGameOverPanel
     {
         public event Action RestartClicked;
-
+        public event Action ExitGameClicked;
         [SerializeField]
         private TextMeshProUGUI currentScoreText;
         [SerializeField]
@@ -19,10 +19,18 @@ namespace PhantomGrid
         private TextMeshProUGUI bestTimeText;
         [SerializeField]
         private Button restartButton;
+        [SerializeField]
+        private Button exitGameButton;
         
         void Start()
         {
             restartButton.onClick.AddListener(OnRestartClicked);
+            exitGameButton.onClick.AddListener(OnExitGame);
+        }
+
+        private void OnExitGame()
+        {
+            ExitGameClicked?.Invoke();
         }
 
         private void OnRestartClicked()
@@ -38,11 +46,17 @@ namespace PhantomGrid
             //bestTimeText.text = highScore.ToString("hh':'mm':'ss");
         }
 
+        private void OnDestroy()
+        {
+            restartButton.onClick.RemoveAllListeners();
+            exitGameButton.onClick.RemoveAllListeners();
+        }
     }
 
     public interface IGameOverPanel
     {
         event Action RestartClicked;
+        event Action ExitGameClicked;
         void SetScore(int score, int  highScore, TimeSpan currentTime, TimeSpan bestTime);
     }
 }

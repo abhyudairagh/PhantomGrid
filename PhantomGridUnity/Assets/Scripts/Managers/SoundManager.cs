@@ -1,21 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+
+using PhantomGrid.ScriptableObjects;
 using UnityEngine;
+using Zenject;
 
 namespace PhantomGrid
 {
-    public class SoundManager : MonoBehaviour
+    public class SoundManager : MonoBehaviour, ISoundManager
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+       [SerializeField]
+       AudioSource _sfxSource;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+       private ISoundSettings _soundSettings;
+
+       [Inject]
+       public void Construct(ISoundSettings soundSettings)
+       {
+           _soundSettings = soundSettings;
+       }
+       public void PlaySound(SoundType soundType)
+       {
+           _sfxSource.PlayOneShot(_soundSettings.GetAudioClip(soundType));
+       }
+    }
+
+    public interface ISoundManager
+    {
+        void PlaySound(SoundType soundType);
     }
 }

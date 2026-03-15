@@ -54,6 +54,7 @@ namespace PhantomGrid.Managers
             _startGamePanel.StartGameClicked  += OnStartGamePressed;
             _startGamePanel.ResumeGame += OnResumeGamePressed;
             _gameStatusPanel.CloseGameConfirmed += CloseGame;
+            _gameOverPanel.ExitGameClicked += CloseGame;
             SetActiveStartGamePanel(true);
         }
 
@@ -99,6 +100,7 @@ namespace PhantomGrid.Managers
         private void SetActiveStartGamePanel(bool enable)
         {
             _startGamePanel.gameObject.SetActive(enable);
+            _gameOverPanel.gameObject.SetActive(false);
             _gamePanel.SetActive(false);
         }
 
@@ -134,6 +136,7 @@ namespace PhantomGrid.Managers
             _gameOverPanel.RestartClicked -= OnRestartGamePressed;
             _startGamePanel.ResumeGame -= OnResumeGamePressed;
             _gameStatusPanel.CloseGameConfirmed -= CloseGame;
+            _gameOverPanel.ExitGameClicked -= CloseGame;
         }
     }
 

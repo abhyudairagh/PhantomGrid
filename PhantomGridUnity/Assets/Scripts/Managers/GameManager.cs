@@ -25,6 +25,7 @@ namespace PhantomGrid.Managers
         private IGameSettings _gameSettings;
         private IScoreHandler _scoreHandler;
         private IGameSessionManager _gameSessionManager;
+        private ISoundManager _soundManager;
 
         [Inject]
         public void Construct(
@@ -34,7 +35,8 @@ namespace PhantomGrid.Managers
             IEventBus eventBus,
             IGameSettings gameSettings,
             IScoreHandler scoreHandler,
-            IGameSessionManager gameSessionManager)
+            IGameSessionManager gameSessionManager,
+            ISoundManager soundManager)
         {
             _uiManager = uiManager;
             _cardImageRepository = cardImageRepository;
@@ -43,6 +45,7 @@ namespace PhantomGrid.Managers
             _gameSettings = gameSettings;
             _scoreHandler = scoreHandler;
             _gameSessionManager = gameSessionManager;
+            _soundManager = soundManager;
         }
         
         private void Start()
@@ -83,8 +86,6 @@ namespace PhantomGrid.Managers
 
         private void OnStartGame(StartGameEvent payload)
         {
-           
-
              var selectedGameLevel =  payload.SelectedLevel;
              var gameLevel = _gameSettings.GetLevel(selectedGameLevel);
              
@@ -116,6 +117,8 @@ namespace PhantomGrid.Managers
 
         private void OnCardFlipped(CardFlippedEvent cardFlipEvent)
         {
+            _soundManager.PlaySound(SoundType.CardFlip);
+            
             ValidateCard(cardFlipEvent.Card);
             _uiManager.ShowGameStatusUpdates(_scoreHandler.CurrentGameStatus);
 
@@ -130,6 +133,7 @@ namespace PhantomGrid.Managers
             _scoreHandler.SaveHighScore();
             _uiManager.ShowGameOver();
             _gameSessionManager.Reset();
+            _soundManager.PlaySound(SoundType.GameOver);
         }
 
         private void ValidateCard(ICard card)
@@ -157,6 +161,7 @@ namespace PhantomGrid.Managers
             _reservedToCheckPair.Reset();
             card.Reset();
             _scoreHandler.MatchFailed();
+            _soundManager.PlaySound(SoundType.MatchFail);
         }
 
         private void HandleMatchFound(ICard card)
@@ -165,6 +170,8 @@ namespace PhantomGrid.Managers
             card.MatchComplete();
             _scoreHandler.MatchFound();
             _totalCards -= 2;
+            
+            _soundManager.PlaySound(SoundType.MatchSuccess);
         }
 
         private IEnumerable<ICard> CreateCardsData(int rows, int columns)
